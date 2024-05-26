@@ -5,13 +5,13 @@
 ## - Shakespeare Dataset을 활용한 실험 -
 
 ### 1. 소개
-이 보고서에서는 Shakespeare 데이터셋을 사용하여 문자 단위 언어 모델링 실험을 수행한 결과를 다룹니다. 바닐라 RNN(Recurrent Neural Network)과 LSTM(Long Short-Term Memory) 모델을 구현하고, 이들의 성능을 비교 분석하였습니다.
+이 보고서에서는 Shakespeare 데이터셋을 사용하여 문자 단위 언어 모델링 실험을 수행한 결과를 다룹니다. RNN(Recurrent Neural Network)과 LSTM(Long Short-Term Memory) 모델을 구현하고, 이들의 성능을 비교 분석하였습니다.
 
 ### 2. 데이터셋
 실험에는 Shakespeare 데이터셋을 사용하였습니다. 이 데이터셋은 Shakespeare의 작품에서 발췌한 텍스트로 구성되어 있습니다. 데이터셋은 문자 단위로 처리되었으며, 각 문자는 고유한 인덱스로 매핑되었습니다.
 
 ### 3. 모델 구조
-바닐라 RNN (CharRNN): 기본적인 RNN 구조로, 임베딩 층, RNN 층, 출력 층으로 구성됩니다.
+RNN (CharRNN): 기본적인 RNN 구조로, 임베딩 층, RNN 층, 출력 층으로 구성됩니다.
 
 - hidden layer size: 512
 - number of layers: 3
