@@ -12,29 +12,32 @@
 
 ### 3. 모델 구조
 바닐라 RNN (CharRNN): 기본적인 RNN 구조로, 임베딩 층, RNN 층, 출력 층으로 구성됩니다.
+
 - hidden layer size: 512
 - number of layers: 3
+  
 LSTM (CharLSTM): RNN 대신 LSTM 층을 사용한 모델로, 장기 의존성을 더 잘 포착할 수 있습니다.
+
 - hidden layer size: 512
 - number of layers: 3
 
 Optimization 초기에 모델은 hidden layer size = 128, number of layers = 5로 Adam 사용하여 학습을 진행했습니다. LSTM이 RNN에 비해 성능이 떨어지는 현상이 관찰되었습니다. 이를 해결하기위해 아래와 같이 설정하였습니다.
 
-hidden layer size를 128 -> 512
-number of layer를 5 -> 3
-Adam -> AdamW 
+- hidden layer size를 128 -> 512
+- number of layer를 5 -> 3
+- Adam -> AdamW 
 
-Hidden Layer Size 증가:
+##### Hidden Layer Size 증가:
 Hidden layer size를 증가시키면 모델의 표현력이 커집니다. 더 많은 뉴런을 사용하여 더 복잡한 패턴을 학습할 수 있게 됩니다.
 특히 Shakespeare 데이터셋과 같이 어휘량이 많고 문맥 의존성이 높은 데이터에서는 더 큰 hidden layer size가 도움이 될 수 있습니다.
 
-Number of Layers 감소:
+##### Number of Layers 감소:
 초기에 5개의 층을 사용했을 때 LSTM의 성능이 RNN보다 낮았던 것은, LSTM의 깊이가 너무 깊어졌기 때문일 수 있습니다.
 LSTM은 각 층마다 게이트와 메모리 셀을 가지고 있어 이미 깊은 구조를 가지고 있습니다. 따라서 층을 너무 많이 쌓으면 오히려 기울기 소실이나 과적합 문제가 발생할 수 있습니다.
 층의 수를 줄임으로써 모델의 복잡도를 낮추고, 학습 안정성을 높일 수 있습니다.
 
 
-AdamW 옵티마이저 사용:
+##### AdamW 옵티마이저 사용:
 AdamW는 Adam 옵티마이저의 변형으로, 가중치 감쇠(Weight Decay)를 별도로 적용합니다.
 가중치 감쇠는 모델의 가중치 값이 너무 커지는 것을 방지하여 과적합을 억제하는 효과가 있습니다.
 Adam에 가중치 감쇠를 추가한 AdamW를 사용함으로써, 모델의 일반화 성능을 향상시킬 수 있습니다.
@@ -49,6 +52,9 @@ Adam에 가중치 감쇠를 추가한 AdamW를 사용함으로써, 모델의 일
 ![Loss Plot - RNN](loss_plot_RNN.png)
 ##### 2. LSTM
 ![Loss Plot - LSTM](loss_plot_LSTM.png)
+
+
+위 그림은 RNN과 LSTM 모델의 Train loss 및 Validation loss를 epoch 별로 시각화한 결과입니다. LSTM 모델이 RNN 모델보다 전반적으로 낮은 손실값을 보이고 있으며, 검증 데이터셋에 대한 최종 손실값은 LSTM 모델이 1.6744, RNN 모델이 2.17로 LSTM 모델의 성능이 더 좋은 것을 확인할 수 있습니다.
 
 #### 5.2. 언어 생성 성능
 각 모델을 사용하여 생성한 샘플 텍스트는 첨부된 파일 (generated_RNN.txt, generated_LSTM.txt)에서 확인할 수 있습니다. 생성된 텍스트를 비교해 보면, CharLSTM 모델이 CharRNN 모델보다 더 자연스럽고 문법적으로 올바른 문장을 생성하는 경향이 있음을 알 수 있습니다. CharRNN 모델은 때로는 부자연스러운 단어나 구문을 생성하는 반면, CharLSTM 모델은 Shakespeare의 작품 스타일을 더 잘 모방하고 있습니다.
