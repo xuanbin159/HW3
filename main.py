@@ -81,7 +81,7 @@ def main(args):
     num_layers = 3
     batch_size = 128
     train_ratio = 0.9
-    lr = 0.001
+    lr = 0.01
 
 
     train_size = int(train_ratio * len(dataset))
@@ -112,9 +112,10 @@ def main(args):
     # 학습 및 검증 손실 값을 저장할 리스트 초기화
     train_losses = []
     val_losses = []
+    num_characters = 100
+    num_epochs = 30
 
     # Train and validate the model
-    num_epochs = 30
     for epoch in range(1, num_epochs + 1):
         trn_loss = train(model, trn_loader, device, criterion, optimizer)
         val_loss = validate(model, val_loader, device, criterion)
@@ -127,34 +128,32 @@ def main(args):
     torch.save(model.state_dict(), f"trained_{args.model}.pth")
 
     # 캐릭터 생성
-    seed_characters = "ROMEO: "
-    temperature = 0.8
-    num_characters = 100
 
-    generated_samples = []
-    for i in range(5):
-        print(f"Sample {i+1}:")
-        sample = generate(model, dataset, seed_characters, temperature, num_characters, device)
-        print(sample)
-        print()
-        generated_samples.append(sample)
-        # 생성된 샘플을 파일로 저장
-    with open(f'generated_{args.model}.txt', 'w') as f:
-        for i, sample in enumerate(generated_samples):
-            f.write(f"Sample {i+1}:\n")
-            f.write(sample)
-            f.write("\n\n")
     
-    # 학습 및 검증 손실 값 그래프 그리기
-    plt.figure()
-    plt.plot(train_losses, label='Train Loss')
-    plt.plot(val_losses, label='Validation Loss')
-    plt.xlabel('Epoch')
-    plt.ylabel('Loss')
-    plt.legend()
-    plt.savefig(f'loss_plot_{args.model}.png')
-    plt.show()
 
+    # 캐릭터 및 temperature 설정
+    characters = ["ROMEO", "JULIET", "FRIAR LAURENCE"]
+    temperatures = [0.8, 1.0, 2.0]
+
+    for character in characters:
+        for temperature in temperatures:
+            seed_characters = f"{character}: "
+            generated_samples = []
+            
+            for i in range(5):
+                print(f"Generating sample {i+1} for {character} (temperature={temperature})...")
+                sample = generate(model, dataset, seed_characters, temperature, num_characters, device)
+                generated_samples.append(sample)
+            
+            # 생성된 샘플을 파일로 저장
+            filename = f"generate/generated_{args.model}_{character}_temp_{temperature:.1f}.txt"
+            with open(filename, "w") as f:
+                for i, sample in enumerate(generated_samples):
+                    f.write(f"Sample {i+1}:\n")
+                    f.write(sample)
+                    f.write("\n\n")
+            
+            print(f"Generated samples for {character} (temperature={temperature}) saved to {filename}\n")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
